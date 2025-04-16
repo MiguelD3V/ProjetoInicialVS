@@ -167,6 +167,17 @@ class ExibirPaciente : Menu
         Console.WriteLine("Digite o ID do Paciente Desejado:");
         int id = int.Parse(Console.ReadLine());
 
+        //Valida se o ID contém 3 numeros
+        if (id <= 0 || id > 3)
+        {
+            while (id < 3 || id > 3)
+            {
+                Console.WriteLine("O ID deve conter uma sequencia de 3 numeros");
+                Console.WriteLine("Digite um ID Válido:");
+                id = int.Parse(Console.ReadLine());
+            }
+        }
+
         var paciente =  TbPaciente.Buscar(p => p.Id == id);
 
         if(paciente != null)
