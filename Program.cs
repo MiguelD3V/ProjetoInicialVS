@@ -78,6 +78,7 @@ internal class Program
         return _pacientes.Find(predicado);
 
     }
+ 
 }
 
 class Paciente
@@ -94,12 +95,14 @@ class Paciente
 
 class Menu
 {
+    //Exibe o logo do sistema
     public void exibirMenu()
     {
         Console.WriteLine(" ______             _                        ______  _______  _____  \r\n(_____ \\           (_)             _        (_____ \\(_______)(_____) \r\n _____) )____  ____ _ _____ ____ _| |_ _____ _____) )______  _  __ _ \r\n|  ____(____ |/ ___) | ___ |  _ (_   _) ___ (_____ (|  ___ \\| |/ /| |\r\n| |    / ___ ( (___| | ____| | | || |_| ____|_____) ) |___) )   /_| |\r\n|_|    \\_____|\\____)_|_____)_| |_| \\__)_____|______/|______/ \\_____/ ");
         Console.WriteLine("*******************************************************************\n                 BEM VINDO(A) AO PACIENTE360\n*******************************************************************");
     }
-
+    
+    //Exibe as opções disponiveis
     public void opcoesDoMenu()
     {
         {
@@ -121,11 +124,9 @@ class Menu
 
 class CadastrarPaciente : Menu
 {
-    public static void ValidaCadastro()
-    {
-        
-    }
+    
 
+    //Executa a os comandos para cadastrar um usuário no sistema
     public static void ExecutarCadastro()
     {
         limpaTela();
@@ -135,25 +136,75 @@ class CadastrarPaciente : Menu
 
         Console.Write("ID: ");
         paciente.Id = int.Parse(Console.ReadLine());
+        
+        //Valida se o ID contém 3 numeros
+        if (paciente.Id <= 0 || paciente.Id > 3)
+        {
+            while (paciente.Id < 3 || paciente.Id > 3)
+            {
+                Console.WriteLine("O ID deve conter uma sequencia de 3 numeros");
+                Console.WriteLine("Digite um ID Válido:");
+                paciente.Id = int.Parse(Console.ReadLine());
+            }
+        }
+        
+
+        if (TbPaciente.Buscar(p => p.Id == paciente.Id) != null)
+        {
+            while(TbPaciente.Buscar(p => p.Id == paciente.Id) != null)
+            {
+                Console.WriteLine("O ID digitado já existe");
+                Console.WriteLine("Digite um ID Válido:");
+                paciente.Id = int.Parse(Console.ReadLine());
+            }
+        }
+
+
 
         Console.Write("Nome: ");
         paciente.Nome = Console.ReadLine();
 
-        Console.Write("Idade: ");
-        paciente.Idade = int.Parse(Console.ReadLine());
+        //Válida se o nome é muito curto
+        if (paciente.Nome.Length < 3)
+        {
+            while (paciente.Nome.Length < 3)
+            {
+                Console.WriteLine("O nome digitado é muito curto");
+                Console.WriteLine("Digite novamente:");
+                paciente.Nome = Console.ReadLine();
+            }
+        }
 
-        Console.Write("Logradouro: ");
-        paciente.Logradouro = Console.ReadLine();
+            Console.Write("Idade: ");
+            paciente.Idade = int.Parse(Console.ReadLine());
 
-        Console.Write("Rua (número): ");
-        paciente.Numero = int.Parse(Console.ReadLine());
+             //Válida se a idade é menor que 0 ou maior que 120
+            if (paciente.Idade <= 0 || paciente.Idade > 120)
+            {
+                while (paciente.Idade <= 0 || paciente.Idade > 120)
+                {
+                    Console.WriteLine("A idade digitada invalida");
+                    Console.WriteLine("Digite Novamente:");
+                    paciente.Idade = int.Parse(Console.ReadLine());
+                }
 
-        Console.Write("Email: ");
-        paciente.Email = Console.ReadLine();
+            }
 
-        TbPaciente.Inserir(paciente);
+            Console.Write("Logradouro: ");
+            paciente.Logradouro = Console.ReadLine();
 
-        Console.WriteLine("Paciente cadastrado com sucesso!");
+            Console.Write("Rua (número): ");
+            paciente.Numero = int.Parse(Console.ReadLine());
+            
+
+            Console.Write("Email: ");
+            paciente.Email = Console.ReadLine();
+
+
+            TbPaciente.Inserir(paciente);
+
+            Console.WriteLine("Paciente cadastrado com sucesso!");
+        
     }
 }
 
@@ -162,7 +213,7 @@ class ExibirPaciente : Menu
     public static void ExecutarConsulta()
     {
         limpaTela();
-        Console.WriteLine("\n*** Cadastro de Paciente ***");
+        Console.WriteLine("\n*** Consulta de Paciente ***");
 
         Console.WriteLine("Digite o ID do Paciente Desejado:");
         int id = int.Parse(Console.ReadLine());
@@ -199,7 +250,7 @@ class DeletarPaciente : Menu
     public static void ExecutarDelecao()
     {
         limpaTela();
-        Console.WriteLine("\n*** Cadastro de Paciente ***");
+        Console.WriteLine("\n*** Deletar Paciente ***");
 
         Console.WriteLine("Digite o ID do Paciente Desejado:");
         int id = int.Parse(Console.ReadLine());
@@ -218,8 +269,19 @@ class AlterarPaciente : Menu
 
         Console.WriteLine("Digite o ID do Paciente Desejado:");
         int id = int.Parse(Console.ReadLine());
-        
-        
+
+        if (id <= 0 || id > 3)
+        {
+            while (id < 3 || id > 3)
+            {
+                Console.WriteLine("O ID deve conter uma sequencia de 3 numeros");
+                Console.WriteLine("Digite um ID Válido:");
+                id = int.Parse(Console.ReadLine());
+            }
+        }
+
+
+
         Paciente paciente = new Paciente();
 
         paciente.Id = id;
@@ -229,6 +291,18 @@ class AlterarPaciente : Menu
 
         Console.Write("Idade: ");
         paciente.Idade = int.Parse(Console.ReadLine());
+       
+        if(paciente.Idade <= 0 || paciente.Idade > 120)
+        {
+            while (paciente.Idade <= 0 || paciente.Idade > 120)
+            {
+                Console.WriteLine("A idade digitada invalida");
+                Console.WriteLine("Digite Novamente:");
+                paciente.Idade = int.Parse(Console.ReadLine());
+            }
+
+        }
+        
 
         Console.Write("Logradouro: ");
         paciente.Logradouro = Console.ReadLine();
@@ -239,10 +313,11 @@ class AlterarPaciente : Menu
         Console.Write("Email: ");
         paciente.Email = Console.ReadLine();
 
-        TbPaciente.Inserir(paciente);
+        TbPaciente.Atualizar(paciente);
 
         Console.WriteLine("Paciente Atualizado com sucesso!");
 
-        TbPaciente.Atualizar(paciente);
+        
     }
 }
+
