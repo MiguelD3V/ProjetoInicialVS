@@ -1,5 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using System.Threading.Channels;
+using ProjetoInicialVS.Controllers;
+using ProjetoInicialVS.Models;
 
 internal class Program
 {
@@ -82,16 +84,6 @@ internal class Program
  
 }
 
-class Paciente
-{
-    public int Id { get; set; }
-    public string Nome { get; set; }
-    public  int Idade { get; set; }
-    public string Logradouro { get; set; }
-    public int Numero { get; set; }
-    public string Email { get; set; }
-
-}
 
 
 class Menu
