@@ -1,4 +1,7 @@
-﻿using System.Threading.Channels;
+﻿using System.Text.RegularExpressions;
+using System.Threading.Channels;
+using ProjetoInicialVS.Controllers;
+using ProjetoInicialVS.Models;
 
 internal class Program
 {
@@ -8,8 +11,8 @@ internal class Program
         bool continuar = true;
         /*
          Validar se as informações estão ok
-         Verificar se o paciente está cadastrado
-         Inserir no banco de dados
+         Verificar se o paciente está cadastrado OK
+         Inserir no banco de dados Ok
          */
        
 
@@ -81,16 +84,6 @@ internal class Program
  
 }
 
-class Paciente
-{
-    public int Id { get; set; }
-    public string Nome { get; set; }
-    public  int Idade { get; set; }
-    public string Logradouro { get; set; }
-    public int Numero { get; set; }
-    public string Email { get; set; }
-
-}
 
 
 class Menu
@@ -135,20 +128,19 @@ class CadastrarPaciente : Menu
         Paciente paciente = new Paciente();
 
         Console.Write("ID: ");
-        paciente.Id = int.Parse(Console.ReadLine());
-        
+        string id = Console.ReadLine();
+
         //Valida se o ID contém 3 numeros
-        if (paciente.Id <= 0 || paciente.Id > 3)
-        {
-            while (paciente.Id < 3 || paciente.Id > 3)
+        while (!Regex.IsMatch(id, @"^\d{3}$"))
             {
                 Console.WriteLine("O ID deve conter uma sequencia de 3 numeros");
                 Console.WriteLine("Digite um ID Válido:");
-                paciente.Id = int.Parse(Console.ReadLine());
+                id = Console.ReadLine();
             }
-        }
-        
 
+        paciente.Id = int.Parse(id);
+        
+        //Validá se o usúario ja está cadastrado
         if (TbPaciente.Buscar(p => p.Id == paciente.Id) != null)
         {
             while(TbPaciente.Buscar(p => p.Id == paciente.Id) != null)
@@ -158,8 +150,6 @@ class CadastrarPaciente : Menu
                 paciente.Id = int.Parse(Console.ReadLine());
             }
         }
-
-
 
         Console.Write("Nome: ");
         paciente.Nome = Console.ReadLine();
@@ -193,12 +183,29 @@ class CadastrarPaciente : Menu
             Console.Write("Logradouro: ");
             paciente.Logradouro = Console.ReadLine();
 
-            Console.Write("Rua (número): ");
-            paciente.Numero = int.Parse(Console.ReadLine());
-            
 
+            Console.Write("Rua (número): ");
+            string numero = Console.ReadLine();
+
+            //Valida de o foram digitados outros caracteres além de números
+     
+            while(!Regex.IsMatch(numero, @"^\d+$"))
+            {
+               Console.WriteLine("Valor digitado é inválido, digite apenas números:");
+               numero = Console.ReadLine();
+            }
+            paciente.Numero = int.Parse(numero); 
+         
+          
             Console.Write("Email: ");
             paciente.Email = Console.ReadLine();
+
+            //Válida email
+            while(!Regex.IsMatch(paciente.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+            {
+            Console.WriteLine("Digite um email válido:");
+            paciente.Email = Console.ReadLine();
+            }
 
 
             TbPaciente.Inserir(paciente);
@@ -216,19 +223,18 @@ class ExibirPaciente : Menu
         Console.WriteLine("\n*** Consulta de Paciente ***");
 
         Console.WriteLine("Digite o ID do Paciente Desejado:");
-        int id = int.Parse(Console.ReadLine());
+        string entrada = Console.ReadLine();
 
         //Valida se o ID contém 3 numeros
-        if (id <= 0 || id > 3)
+        while (!Regex.IsMatch(entrada, @"^\d{3}$"))
         {
-            while (id < 3 || id > 3)
-            {
-                Console.WriteLine("O ID deve conter uma sequencia de 3 numeros");
-                Console.WriteLine("Digite um ID Válido:");
-                id = int.Parse(Console.ReadLine());
-            }
+            Console.WriteLine("O ID deve conter uma sequencia de 3 numeros");
+            Console.WriteLine("Digite um ID Válido:");
+            entrada = Console.ReadLine();
         }
 
+        int id = int.Parse(entrada);
+       
         var paciente =  TbPaciente.Buscar(p => p.Id == id);
 
         if(paciente != null)
@@ -253,7 +259,16 @@ class DeletarPaciente : Menu
         Console.WriteLine("\n*** Deletar Paciente ***");
 
         Console.WriteLine("Digite o ID do Paciente Desejado:");
-        int id = int.Parse(Console.ReadLine());
+        string entrada = Console.ReadLine();
+
+        //Valida se o ID contém 3 numeros
+        while (!Regex.IsMatch(entrada, @"^\d{3}$"))
+        {
+            Console.WriteLine("O ID deve conter uma sequencia de 3 numeros");
+            Console.WriteLine("Digite um ID Válido:");
+            entrada = Console.ReadLine();
+        }
+         int id = int.Parse(entrada);
 
         TbPaciente.Deletar(id);
 
@@ -266,33 +281,39 @@ class AlterarPaciente : Menu
     {
         limpaTela();
         Console.WriteLine("\n*** Alteração de Paciente ***");
+        Console.Write("ID: ");
+        string id = Console.ReadLine();
 
-        Console.WriteLine("Digite o ID do Paciente Desejado:");
-        int id = int.Parse(Console.ReadLine());
-
-        if (id <= 0 || id > 3)
+         Paciente paciente = new Paciente();
+        //Valida se o ID contém 3 numeros
+        while (!Regex.IsMatch(id, @"^\d{3}$"))
         {
-            while (id < 3 || id > 3)
-            {
-                Console.WriteLine("O ID deve conter uma sequencia de 3 numeros");
-                Console.WriteLine("Digite um ID Válido:");
-                id = int.Parse(Console.ReadLine());
-            }
+            Console.WriteLine("O ID deve conter uma sequencia de 3 numeros");
+            Console.WriteLine("Digite um ID Válido:");
+            id = Console.ReadLine();
         }
 
-
-
-        Paciente paciente = new Paciente();
-
-        paciente.Id = id;
-
+        paciente.Id = int.Parse(id);
+  
         Console.Write("Nome: ");
         paciente.Nome = Console.ReadLine();
 
+        //Válida se o nome é muito curto
+        if (paciente.Nome.Length < 3)
+        {
+            while (paciente.Nome.Length < 3)
+            {
+                Console.WriteLine("O nome digitado é muito curto");
+                Console.WriteLine("Digite novamente:");
+                paciente.Nome = Console.ReadLine();
+            }
+        }
+
         Console.Write("Idade: ");
         paciente.Idade = int.Parse(Console.ReadLine());
-       
-        if(paciente.Idade <= 0 || paciente.Idade > 120)
+
+        //Válida se a idade é menor que 0 ou maior que 120
+        if (paciente.Idade <= 0 || paciente.Idade > 120)
         {
             while (paciente.Idade <= 0 || paciente.Idade > 120)
             {
@@ -302,16 +323,33 @@ class AlterarPaciente : Menu
             }
 
         }
-        
 
         Console.Write("Logradouro: ");
         paciente.Logradouro = Console.ReadLine();
 
+
         Console.Write("Rua (número): ");
-        paciente.Numero = int.Parse(Console.ReadLine());
+        string numero = Console.ReadLine();
+
+        //Valida de o foram digitados outros caracteres além de números
+
+        while (!Regex.IsMatch(numero, @"^\d+$"))
+        {
+            Console.WriteLine("Valor digitado é inválido, digite apenas números:");
+            numero = Console.ReadLine();
+        }
+        paciente.Numero = int.Parse(numero);
+
 
         Console.Write("Email: ");
         paciente.Email = Console.ReadLine();
+
+        //Válida email
+        while (!Regex.IsMatch(paciente.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+        {
+            Console.WriteLine("Digite um email válido:");
+            paciente.Email = Console.ReadLine();
+        }
 
         TbPaciente.Atualizar(paciente);
 
