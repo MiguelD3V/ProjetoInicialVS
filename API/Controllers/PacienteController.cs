@@ -50,9 +50,17 @@ namespace ProjetoIniciaVs.API.Controllers
         [HttpGet("{id}")]
         public IActionResult Consulta(int id)
         {
-            var busca = _pacienteService.Consultar(id);
+            try
+            {
+                var busca = _pacienteService.Consultar(id);
 
-            return Ok(busca);
+                return Ok(busca);
+            }
+            catch
+            {
+                return Problem("Ocorreu um erro", statusCode: 500);
+            }
+
         }
 
         [HttpGet]
