@@ -66,10 +66,17 @@ namespace ProjetoIniciaVs.API.Controllers
         [HttpGet]
         public IActionResult ListarTodos()
         {
-            var lista = _pacienteService.ListarTodos();
-            return Ok(lista);
-        }
+            try
+            {
+                var lista = _pacienteService.ListarTodos();
+                return Ok(lista);
+            }
+            catch (Exception ex)
+            {
 
+                return Problem($"Ocorreu o erro{ex}");
+            }
+        }
     }
 
 }
