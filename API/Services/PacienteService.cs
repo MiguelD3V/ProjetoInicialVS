@@ -14,6 +14,7 @@ namespace ProjetoIniciaVs.API.Services
 {
     public class PacienteService : IPacienteService
     {
+       
 
         public static List<Paciente> _pacientes = new List<Paciente>();
 
@@ -21,21 +22,10 @@ namespace ProjetoIniciaVs.API.Services
         {
             var response = new PacienteResponseDto();
 
-            if (paciente.Nome.Length < 3)
+            if(!EhValido(paciente))
             {
-                response.AddMessage("Nome do Paciente é muito curto");
-            }
-            if (paciente.Idade <= 0 || paciente.Idade > 120)
-            {
-                response.AddMessage("A idade digitada invalida");
-            }
-            if (!Regex.IsMatch(paciente.Numero.ToString(), @"^\d+$"))
-            {
-                response.AddMessage("Valor digitado é inválido, digite apenas números:");
-            }
-            if (!Regex.IsMatch(paciente.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
-            {
-                response.AddMessage("Digite um email válido:");
+                response.AddMessage("Dados inválidos para cadastro do paciente");
+                return Task.FromResult(response);
             }
 
             if (response.Sucesso)
@@ -77,21 +67,10 @@ namespace ProjetoIniciaVs.API.Services
                 response.AddMessage("paciente não encontrado");
             }
 
-            if (paciente.Nome.Length < 3)
+            if (!EhValido(paciente))
             {
-                response.AddMessage("Nome do Paciente é muito curto");
-            }
-            if (paciente.Idade <= 0 || paciente.Idade > 120)
-            {
-                response.AddMessage("A idade digitada invalida");
-            }
-            if (!Regex.IsMatch(paciente.Numero.ToString(), @"^\d+$"))
-            {
-                response.AddMessage("Valor digitado é inválido, digite apenas números:");
-            }
-            if (!Regex.IsMatch(paciente.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
-            {
-                response.AddMessage("Digite um email válido:");
+                response.AddMessage("Dados inválidos para atualização");
+                return Task.FromResult(response);
             }
 
             if (response.Sucesso)
@@ -103,7 +82,7 @@ namespace ProjetoIniciaVs.API.Services
             return Task.FromResult(response);
         }
 
-        public Task<Paciente> Consultar(int id)
+        public Task<Paciente?> Consultar(int id)
         {
             var paciente = _pacientes.Find(p => p.Id == id);
             return Task.FromResult(paciente);
@@ -112,6 +91,29 @@ namespace ProjetoIniciaVs.API.Services
         public Task<List<Paciente>> ListarTodos()
         {
             return Task.FromResult(_pacientes);
+        }
+
+        private bool EhValido(Paciente paciente)
+        {
+            var response = new PacienteResponseDto();
+
+            if (paciente.Nome.Length < 3)
+            {
+                return false;
+            }
+            if (paciente.Idade <= 0 || paciente.Idade > 120)
+            {
+                return false;
+            }
+            if (!Regex.IsMatch(paciente.Numero.ToString(), @"^\d+$"))
+            {
+                return false;
+            }
+            if (!Regex.IsMatch(paciente.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

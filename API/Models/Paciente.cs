@@ -14,5 +14,6 @@ namespace ProjetoIniciaVs.API.Models
         public string Logradouro { get; set; } = string.Empty;
         public int Numero { get; set; }
         public string Email { get; set; } = string.Empty;
+              
     }
 }

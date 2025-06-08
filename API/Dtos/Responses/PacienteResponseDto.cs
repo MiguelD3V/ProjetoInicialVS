@@ -1,4 +1,5 @@
 ﻿using ProjetoInicialVS.Dtos.Responses;
+using ProjetoIniciaVs.API.Interfaces;
 using ProjetoIniciaVs.API.Models;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,5 @@ namespace ProjetoIniciaVs.API.Dtos.Responses
     {
         public string Mensagem { get; set; } = string.Empty;
         public Paciente? Paciente { get; set; }
-
-
     }
 }
