@@ -26,17 +26,31 @@ namespace ProjetoIniciaVs.API.Controllers
         [HttpPost]
         public IActionResult Cadastro([FromBody] Paciente paciente)
         {
-            var resultado = _pacienteService.Inserir(paciente);
+            try
+            {
+                var resultado = _pacienteService.Inserir(paciente);
 
-            return Ok(resultado);
+                return Ok(resultado);
+            }
+            catch (Exception ex)
+            {
+                return Problem($"Ocorreu o erro {ex.Message}", statusCode: 500);
+            }
         }
 
         [HttpPut("{Id}")]
-        public IActionResult Atualizar(int id,[FromBody] Paciente paciente) 
+        public IActionResult Atualizar(int id, [FromBody] Paciente paciente)
         {
-            var atualizado = _pacienteService.Atualizar(paciente);
+            try
+            {
+                var atualizado = _pacienteService.Atualizar(paciente);
 
-            return Ok(atualizado);
+                return Ok(atualizado);
+            }
+            catch (Exception ex)
+            {
+                return Problem($"Ocorreu o erro {ex.Message}", statusCode: 500);
+            }
         }
 
         [HttpDelete("{id}")]
@@ -52,8 +66,9 @@ namespace ProjetoIniciaVs.API.Controllers
             {
                 return Problem($"Ocorreu o erro {ex.Message}", statusCode: 500);
             }
+        }
 
-        [HttpGet("{id}")]
+            [HttpGet("{id}")]
         public IActionResult Consulta(int id)
         {
             try
@@ -62,9 +77,9 @@ namespace ProjetoIniciaVs.API.Controllers
 
                 return Ok(busca);
             }
-            catch
+            catch(Exception ex)
             {
-                return Problem("Ocorreu um erro", statusCode: 500);
+                return Problem($"Ocorreu o erro{ex.Message}", statusCode: 500);
             }
 
         }
