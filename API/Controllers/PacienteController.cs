@@ -42,10 +42,16 @@ namespace ProjetoIniciaVs.API.Controllers
         [HttpDelete("{id}")]
         public IActionResult Deletar(int id)
         {
-            var resultado = _pacienteService.Deletar(id);
+            try
+            {
+                var resultado = _pacienteService.Deletar(id);
 
-            return Ok(resultado);
-        }
+                return Ok(resultado);
+            }
+            catch (Exception ex)
+            {
+                return Problem($"Ocorreu o erro {ex.Message}", statusCode: 500);
+            }
 
         [HttpGet("{id}")]
         public IActionResult Consulta(int id)
@@ -74,7 +80,7 @@ namespace ProjetoIniciaVs.API.Controllers
             catch (Exception ex)
             {
 
-                return Problem($"Ocorreu o erro{ex}");
+                return Problem($"Ocorreu o erro{ex.Message}", statusCode: 500);
             }
         }
     }
