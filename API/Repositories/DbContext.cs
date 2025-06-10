@@ -5,7 +5,7 @@ namespace ProjetoIniciaVs.API.Repositories
 {
     public class DbContext
     {
-        string connetionString = "Server=localhost;Database=HospitalDb;User Id=sa;Password=123456;";
+        string connetionString = "Server=16.0.1000;Database=HospitalDb;Integrated Security = true;Connect Timeaout = 30;";
         
 
     }

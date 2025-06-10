@@ -17,7 +17,6 @@ namespace ProjetoIniciaVs.API.Controllers
     {
         private readonly IPacienteService _pacienteService;
 
-        
         public PacienteController(IPacienteService pacienteService)
         {
             _pacienteService = pacienteService;

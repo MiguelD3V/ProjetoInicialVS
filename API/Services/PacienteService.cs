@@ -43,7 +43,7 @@ namespace ProjetoIniciaVs.API.Services
 
             var indx = _pacientes.FindIndex(p => p.Id == id);
 
-            if (indx == -1)
+            if (indx <= -1)
             {
                 response.AddMessage("Id Inválido");
             }
