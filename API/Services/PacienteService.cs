@@ -18,14 +18,14 @@ namespace ProjetoIniciaVs.API.Services
 
         public static List<Paciente> _pacientes = new List<Paciente>();
 
-        public Task <PacienteResponseDto> Inserir(Paciente paciente)
+        public async Task <PacienteResponseDto> Inserir(Paciente paciente)
         {
             var response = new PacienteResponseDto();
 
             if(!EhValido(paciente))
             {
                 response.AddMessage("Dados inválidos para cadastro do paciente");
-                return Task.FromResult(response);
+                await Task.FromResult(response);
             }
 
             if (response.Sucesso)
@@ -34,10 +34,10 @@ namespace ProjetoIniciaVs.API.Services
                 _pacientes.Add(paciente);
                 response.Paciente = paciente;
             }
-            return Task.FromResult(response);
+            return await Task.FromResult(response);
         }
 
-        public Task<PacienteResponseDto> Deletar(int id)
+        public async Task<PacienteResponseDto> Deletar(int id)
         {
             var response = new PacienteResponseDto();
 
@@ -53,10 +53,10 @@ namespace ProjetoIniciaVs.API.Services
                 response.AddMessage("Paciente deletado com sucesso");
             }
 
-            return Task.FromResult(response);
+            return await Task.FromResult(response);
         }
 
-        public Task<PacienteResponseDto> Atualizar(Paciente paciente)
+        public async Task<PacienteResponseDto> Atualizar(Paciente paciente)
         {
             var response = new PacienteResponseDto();
 
@@ -70,7 +70,7 @@ namespace ProjetoIniciaVs.API.Services
             if (!EhValido(paciente))
             {
                 response.AddMessage("Dados inválidos para atualização");
-                return Task.FromResult(response);
+                await Task.FromResult(response);
             }
 
             if (response.Sucesso)
@@ -79,18 +79,18 @@ namespace ProjetoIniciaVs.API.Services
                 response.Paciente = paciente;
             }
 
-            return Task.FromResult(response);
+            return await Task.FromResult(response);
         }
 
-        public Task<Paciente?> Consultar(int id)
+        public async Task<Paciente?> Consultar(int id)
         {
             var paciente = _pacientes.Find(p => p.Id == id);
-            return Task.FromResult(paciente);
+            return await Task.FromResult(paciente);
         }
 
-        public Task<List<Paciente>> ListarTodos()
+        public async Task<List<Paciente>> ListarTodos()
         {
-            return Task.FromResult(_pacientes);
+            return await Task.FromResult(_pacientes);
         }
 
         private bool EhValido(Paciente paciente)
