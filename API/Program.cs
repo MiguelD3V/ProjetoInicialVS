@@ -1,4 +1,5 @@
 using ProjetoIniciaVs.API.Interfaces;
+using ProjetoIniciaVs.API.Repositories;
 using ProjetoIniciaVs.API.Services;
 
 namespace ProjetoIniciaVs.API
@@ -15,6 +16,9 @@ namespace ProjetoIniciaVs.API
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddScoped<IPacienteService, PacienteService>();
+            builder.Services.AddScoped<IPacienteRepository>(provider =>
+            new PacienteRepository("Server=localhost; Database=HospitalDb;Integrated Security = true;Connect Timeout = 30;TrustServerCertificate=true;"));
+
 
             var app = builder.Build();
 

@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 using System.Linq;
 using System;
 using System.Collections.Generic;
+using ProjetoIniciaVs.API.Interfaces;
 
 
 namespace ProjetoIniciaVs.API.Repositories
 {
-    public class PacienteRepository
+    public class PacienteRepository : IPacienteRepository
     {
         private readonly string _connectionString;
 
@@ -21,23 +22,37 @@ namespace ProjetoIniciaVs.API.Repositories
 
         public async Task<IEnumerable<PacienteResponseDto>> GetAllPacientesAsync()
         {
-            using (var connection = new SqlConnection(_connectionString))
+            try
             {
-                connection.Open();
-                string query = "SELECT * FROM Pacientes";
-                return await connection.QueryAsync<PacienteResponseDto>(query);
-                connection.Close();
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    connection.Open();
+                    string query = "SELECT * FROM Pacientes";
+                    return await connection.QueryAsync<PacienteResponseDto>(query);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Ocorreu um erro ao buscar os pacientes: {ex.Message}", ex);
             }
         }
 
         public async Task<PacienteResponseDto> GetPacienteByIdAsync(int id)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            try
             {
-                connection.Open();
-                string query = "SELECT * FROM Pacientes WHERE Id = @Id";
-                return await connection.QueryFirstOrDefaultAsync<PacienteResponseDto>(query, new { Id = id });
-                connection.Close();
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    connection.Open();
+                    string query = "SELECT * FROM Pacientes WHERE Id = @Id";
+                    return await connection.QueryFirstOrDefaultAsync<PacienteResponseDto>(query, new { Id = id });
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Ocorreu um erro ao buscar o paciente: {ex.Message}", ex);
             }
         }
         public async Task AddPacienteAsync(Paciente paciente)
@@ -47,7 +62,7 @@ namespace ProjetoIniciaVs.API.Repositories
                 using (var connection = new SqlConnection(_connectionString))
                 {
                     connection.Open();
-                    string query = "INSERT INTO Pacientes (Nome, Idade, Logradouro, Numero, Email) VALUES (@Nome, @Idade, @Numero, @Email)";
+                    string query = "INSERT INTO Pacientes (Nome, Idade, Logradouro, Numero, Email) VALUES (@Nome, @Idade, @Logradouro, @Numero, @Email)";
                     await connection.ExecuteAsync(query, paciente);
                     connection.Close();
                 }
@@ -59,22 +74,36 @@ namespace ProjetoIniciaVs.API.Repositories
         }
         public async Task UpdatePacienteAsync(Paciente paciente)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            try
             {
-                connection.Open();
-                string query = "UPDATE Pacientes SET Nome = @Nome, Idade = @Idade, Logradouro = @Logradouro, Numero = @Numero, Email = @Email WHERE Id = @Id";
-                await connection.ExecuteAsync(query, paciente);
-                connection.Close();
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    connection.Open();
+                    string query = "UPDATE Pacientes SET Nome = @Nome, Idade = @Idade, Logradouro = @Logradouro, Numero = @Numero, Email = @Email WHERE Id = @Id";
+                    await connection.ExecuteAsync(query, paciente);
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Ocorreu um erro ao atualizar o paciente: {ex.Message}", ex);
             }
         }
         public async Task DeletePacienteAsync(int id)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            try
             {
-                connection.Open();
-                string query = "DELETE FROM Pacientes WHERE Id = @Id";
-                await connection.ExecuteAsync(query, new { Id = id });
-                connection.Close();
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    connection.Open();
+                    string query = "DELETE FROM Pacientes WHERE Id = @Id";
+                    await connection.ExecuteAsync(query, new { Id = id });
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Ocorreu um erro ao deletar o paciente: {ex.Message}", ex);
             }
         }
 

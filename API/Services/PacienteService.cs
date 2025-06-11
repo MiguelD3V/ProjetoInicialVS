@@ -14,9 +14,14 @@ namespace ProjetoIniciaVs.API.Services
 {
     public class PacienteService : IPacienteService
     {
-       
+        private readonly IPacienteRepository _pacienteRepository;
 
-        public static List<Paciente> _pacientes = new List<Paciente>();
+        public PacienteService(IPacienteRepository pacienteRepository)
+        {
+            _pacienteRepository = pacienteRepository;
+        }
+
+    
 
         public async Task <PacienteResponseDto> Inserir(Paciente paciente)
         {
@@ -25,72 +30,66 @@ namespace ProjetoIniciaVs.API.Services
             if(!EhValido(paciente))
             {
                 response.AddMessage("Dados inválidos para cadastro do paciente");
-                await Task.FromResult(response);
+                return response;
             }
 
             if (response.Sucesso)
             {
-                paciente.Id = _pacientes.Count + 1;
-                _pacientes.Add(paciente);
+                await _pacienteRepository.AddPacienteAsync(paciente);
                 response.Paciente = paciente;
             }
-            return await Task.FromResult(response);
+            return response;
         }
 
         public async Task<PacienteResponseDto> Deletar(int id)
         {
             var response = new PacienteResponseDto();
 
-            var indx = _pacientes.FindIndex(p => p.Id == id);
-
-            if (indx <= -1)
-            {
-                response.AddMessage("Id Inválido");
-            }
-            else
-            {
-                _pacientes.RemoveAt(indx);
+                await _pacienteRepository.DeletePacienteAsync(id);
                 response.AddMessage("Paciente deletado com sucesso");
-            }
-
-            return await Task.FromResult(response);
+          
+            return response;
         }
 
         public async Task<PacienteResponseDto> Atualizar(Paciente paciente)
         {
             var response = new PacienteResponseDto();
 
-            var indx = _pacientes.FindIndex(p => p.Id == paciente.Id);
-
-            if (indx == -1)
-            {
-                response.AddMessage("paciente não encontrado");
-            }
-
             if (!EhValido(paciente))
             {
                 response.AddMessage("Dados inválidos para atualização");
-                await Task.FromResult(response);
+                return response;
             }
 
             if (response.Sucesso)
             {
-                _pacientes[indx] = paciente;
+                await _pacienteRepository.UpdatePacienteAsync(paciente);
                 response.Paciente = paciente;
             }
 
-            return await Task.FromResult(response);
+            return response;
         }
 
-        public async Task<Paciente?> Consultar(int id)
+        public async Task<PacienteResponseDto> Consultar(int id)
         {
-            var paciente = _pacientes.Find(p => p.Id == id);
-            return await Task.FromResult(paciente);
+            var paciente = await _pacienteRepository.GetPacienteByIdAsync(id);
+            return paciente;
         }
 
-        public async Task<List<Paciente>> ListarTodos()
+        public async Task<IEnumerable<PacienteResponseDto>> ListarTodos()
         {
-            return await Task.FromResult(_pacientes);
+            var lista = await _pacienteRepository.GetAllPacientesAsync();
+
+            var response = lista.Select(p => new PacienteResponseDto
+            {
+                Id = p.Id,
+                Nome = p.Nome,
+                Idade = p.Idade,
+                Logradouro = p.Logradouro,
+                Numero = p.Numero,
+                Email = p.Email
+            });
+            return response;
         }
 
         private bool EhValido(Paciente paciente)

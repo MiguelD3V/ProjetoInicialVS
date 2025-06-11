@@ -23,11 +23,11 @@ namespace ProjetoIniciaVs.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult Cadastro([FromBody] Paciente paciente)
+        public async Task<IActionResult> CadastroAsync([FromBody] Paciente paciente)
         {
             try
             {
-                var resultado = _pacienteService.Inserir(paciente);
+                var resultado = await _pacienteService.Inserir(paciente);
 
                 return Ok(resultado);
             }
@@ -38,11 +38,11 @@ namespace ProjetoIniciaVs.API.Controllers
         }
 
         [HttpPut("{Id}")]
-        public IActionResult Atualizar(int id, [FromBody] Paciente paciente)
+        public async Task<IActionResult> Atualizar(int id, [FromBody] Paciente paciente)
         {
             try
             {
-                var atualizado = _pacienteService.Atualizar(paciente);
+                var atualizado = await _pacienteService.Atualizar(paciente);
 
                 return Ok(atualizado);
             }
@@ -53,11 +53,11 @@ namespace ProjetoIniciaVs.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Deletar(int id)
+        public async Task<IActionResult> Deletar(int id)
         {
             try
             {
-                var resultado = _pacienteService.Deletar(id);
+                var resultado = await _pacienteService.Deletar(id);
 
                 return Ok(resultado);
             }
@@ -68,11 +68,11 @@ namespace ProjetoIniciaVs.API.Controllers
         }
 
             [HttpGet("{id}")]
-        public IActionResult Consulta(int id)
+        public async Task<IActionResult> Consulta(int id)
         {
             try
             {
-                var busca = _pacienteService.Consultar(id);
+                var busca = await _pacienteService.Consultar(id);
 
                 return Ok(busca);
             }
@@ -84,11 +84,11 @@ namespace ProjetoIniciaVs.API.Controllers
         }
 
         [HttpGet]
-        public IActionResult ListarTodos()
+        public async Task<IActionResult> ListarTodos()
         {
             try
             {
-                var lista = _pacienteService.ListarTodos();
+                var lista = await _pacienteService.ListarTodos();
                 return Ok(lista);
             }
             catch (Exception ex)

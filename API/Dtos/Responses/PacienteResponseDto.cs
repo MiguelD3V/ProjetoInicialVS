@@ -13,5 +13,11 @@ namespace ProjetoIniciaVs.API.Dtos.Responses
     {
         public string Mensagem { get; set; } = string.Empty;
         public Paciente? Paciente { get; set; }
+        public int Id { get; internal set; }
+        public string Nome { get; internal set; }
+        public int Idade { get; internal set; }
+        public string Logradouro { get; internal set; }
+        public int Numero { get; internal set; }
+        public string Email { get; internal set; }
     }
 }
