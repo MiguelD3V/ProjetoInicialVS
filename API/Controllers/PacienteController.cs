@@ -16,11 +16,12 @@ namespace ProjetoIniciaVs.API.Controllers
     public class PacienteController : ControllerBase
     {
         private readonly IPacienteService _pacienteService;
+        private readonly ILogger _logger;
 
-        
-        public PacienteController(IPacienteService pacienteService)
+        public PacienteController(IPacienteService pacienteService, ILogger logger)
         {
             _pacienteService = pacienteService;
+            _logger = logger;
         }
 
         [HttpPost]
@@ -34,7 +35,9 @@ namespace ProjetoIniciaVs.API.Controllers
             }
             catch (Exception ex)
             {
-                return Problem($"Ocorreu o erro {ex.Message}", statusCode: 500);
+                _logger.LogError(ex, "Erro ao Adicionar i oaciente");
+                return Problem("Ocorreu um erro interno", statusCode: 500);
+
             }
         }
 
@@ -49,7 +52,8 @@ namespace ProjetoIniciaVs.API.Controllers
             }
             catch (Exception ex)
             {
-                return Problem($"Ocorreu o erro {ex.Message}", statusCode: 500);
+                _logger.LogError(ex, "Erro ao atualizar o paciente");
+                return Problem("Ocorreu um erro interno", statusCode: 500);
             }
         }
 
@@ -64,11 +68,12 @@ namespace ProjetoIniciaVs.API.Controllers
             }
             catch (Exception ex)
             {
-                return Problem($"Ocorreu o erro {ex.Message}", statusCode: 500);
+                _logger.LogError(ex, "Erro ao deletar o paciente");
+                return Problem("Ocorreu um erro interno", statusCode: 500);
             }
         }
 
-            [HttpGet("{id}")]
+        [HttpGet("{id}")]
         public IActionResult Consulta(int id)
         {
             try
@@ -77,11 +82,11 @@ namespace ProjetoIniciaVs.API.Controllers
 
                 return Ok(busca);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                return Problem($"Ocorreu o erro{ex.Message}", statusCode: 500);
+                _logger.LogError(ex, "Erro ao consultar o paciente");
+                return Problem("Ocorreu um erro interno", statusCode: 500);
             }
-
         }
 
         [HttpGet]
@@ -94,8 +99,8 @@ namespace ProjetoIniciaVs.API.Controllers
             }
             catch (Exception ex)
             {
-
-                return Problem($"Ocorreu o erro{ex.Message}", statusCode: 500);
+                _logger.LogError(ex, "Erro ao listar todos os pacientes");
+                return Problem("Ocorreu um erro interno", statusCode: 500);
             }
         }
     }

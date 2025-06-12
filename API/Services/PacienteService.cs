@@ -14,7 +14,9 @@ namespace ProjetoIniciaVs.API.Services
 {
     public class PacienteService : IPacienteService
     {
-       
+        
+
+        
 
         public static List<Paciente> _pacientes = new List<Paciente>();
 
