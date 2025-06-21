@@ -4,12 +4,20 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using ProjetoInicialVS.Interfaces;
 using ProjetoInicialVS.Models;
 
 namespace ProjetoInicialVS.Controllers
 {
+
     internal class PacienteController
     {
+        private readonly IPacienteService _pacienteService;
+
+        public PacienteController(IPacienteService pacienteService)
+        {
+            _pacienteService = pacienteService;
+        }
         public void Cadastrar()
         {
             Paciente paciente = new Paciente()

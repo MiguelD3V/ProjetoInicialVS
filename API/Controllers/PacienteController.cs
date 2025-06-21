@@ -1,0 +1,108 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
+using ProjetoIniciaVs.API.Interfaces;
+using ProjetoIniciaVs.API.Models;
+
+namespace ProjetoIniciaVs.API.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class PacienteController : ControllerBase
+    {
+        private readonly IPacienteService _pacienteService;
+        private readonly ILogger _logger;
+
+        public PacienteController(IPacienteService pacienteService, ILogger logger)
+        {
+            _pacienteService = pacienteService;
+            _logger = logger;
+        }
+
+        [HttpPost]
+        public IActionResult Cadastro([FromBody] Paciente paciente)
+        {
+            try
+            {
+                var resultado = _pacienteService.Inserir(paciente);
+
+                return Ok(resultado);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao Adicionar i oaciente");
+                return Problem("Ocorreu um erro interno", statusCode: 500);
+
+            }
+        }
+
+        [HttpPut("{Id}")]
+        public IActionResult Atualizar(int id, [FromBody] Paciente paciente)
+        {
+            try
+            {
+                var atualizado = _pacienteService.Atualizar(paciente);
+
+                return Ok(atualizado);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao atualizar o paciente");
+                return Problem("Ocorreu um erro interno", statusCode: 500);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Deletar(int id)
+        {
+            try
+            {
+                var resultado = _pacienteService.Deletar(id);
+
+                return Ok(resultado);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao deletar o paciente");
+                return Problem("Ocorreu um erro interno", statusCode: 500);
+            }
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult Consulta(int id)
+        {
+            try
+            {
+                var busca = _pacienteService.Consultar(id);
+
+                return Ok(busca);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao consultar o paciente");
+                return Problem("Ocorreu um erro interno", statusCode: 500);
+            }
+        }
+
+        [HttpGet]
+        public IActionResult ListarTodos()
+        {
+            try
+            {
+                var lista = _pacienteService.ListarTodos();
+                return Ok(lista);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao listar todos os pacientes");
+                return Problem("Ocorreu um erro interno", statusCode: 500);
+            }
+        }
+    }
+
+}
