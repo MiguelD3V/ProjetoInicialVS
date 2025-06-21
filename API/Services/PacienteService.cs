@@ -51,7 +51,7 @@ namespace ProjetoIniciaVs.API.Services
             return response;
         }
 
-        public async Task<PacienteResponseDto> Atualizar(Paciente paciente)
+        public async Task<PacienteResponseDto> Atualizar(Paciente paciente, int id)
         {
             var response = new PacienteResponseDto();
 
@@ -63,6 +63,7 @@ namespace ProjetoIniciaVs.API.Services
 
             if (response.Sucesso)
             {
+                paciente.Id = id; 
                 await _pacienteRepository.UpdatePacienteAsync(paciente);
                 response.Paciente = paciente;
             }

@@ -76,13 +76,11 @@ namespace ProjetoIniciaVs.API.Repositories
         {
             try
             {
-                using (var connection = new SqlConnection(_connectionString))
-                {
-                    connection.Open();
-                    string query = "UPDATE Pacientes SET Nome = @Nome, Idade = @Idade, Logradouro = @Logradouro, Numero = @Numero, Email = @Email WHERE Id = @Id";
-                    await connection.ExecuteAsync(query, paciente);
-                    connection.Close();
-                }
+                using var connection = new SqlConnection(_connectionString);
+                connection.Open();
+                string query = "UPDATE Pacientes SET Nome = @Nome, Idade = @Idade, Logradouro = @Logradouro, Numero = @Numero, Email = @Email WHERE Id = @Id";
+                await connection.ExecuteAsync(query, paciente);
+                connection.Close();
             }
             catch (Exception ex)
             {

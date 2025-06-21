@@ -37,13 +37,12 @@ namespace ProjetoIniciaVs.API.Controllers
             }
         }
 
-        [HttpPut("{Id}")]
-        public async Task<IActionResult> Atualizar(int id, [FromBody] Paciente paciente)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Atualizar(int id,[FromBody] Paciente paciente)
         {
             try
             {
-                var atualizado = await _pacienteService.Atualizar(paciente);
-
+                var atualizado = await _pacienteService.Atualizar(paciente,id);
                 return Ok(atualizado);
             }
             catch (Exception ex)
