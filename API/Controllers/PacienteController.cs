@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using ProjetoIniciaVs.API.Dtos.Requests;
+using ProjetoIniciaVs.API.Dtos.Responses;
 using ProjetoIniciaVs.API.Interfaces;
 using ProjetoIniciaVs.API.Models;
 
@@ -23,10 +25,12 @@ namespace ProjetoIniciaVs.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CadastroAsync([FromBody] Paciente paciente)
+        public async Task<IActionResult> CadastroAsync([FromBody] PacienteRequestDto paciente)
         {
             try
             {
+                var pacienteResponse = new PacienteResponseDto();
+               
                 var resultado = await _pacienteService.Inserir(paciente);
 
                 return Ok(resultado);
@@ -37,19 +41,19 @@ namespace ProjetoIniciaVs.API.Controllers
             }
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Atualizar(int id,[FromBody] Paciente paciente)
-        {
-            try
-            {
-                var atualizado = await _pacienteService.Atualizar(paciente,id);
-                return Ok(atualizado);
-            }
-            catch (Exception ex)
-            {
-                return Problem($"Ocorreu o erro {ex.Message}", statusCode: 500);
-            }
-        }
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> Atualizar(int id,[FromBody] PacienteResponseDto paciente)
+        //{
+        //    try
+        //    {
+        //        var atualizado = await _pacienteService.Atualizar(paciente,id);
+        //        return Ok(atualizado);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Problem($"Ocorreu o erro {ex.Message}", statusCode: 500);
+        //    }
+        //}
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Deletar(int id)

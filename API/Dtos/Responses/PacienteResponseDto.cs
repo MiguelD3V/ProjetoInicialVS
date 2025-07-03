@@ -5,19 +5,23 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace ProjetoIniciaVs.API.Dtos.Responses
 {
     public class PacienteResponseDto : ResponseBase
     {
+        [JsonIgnore]
         public string Mensagem { get; set; } = string.Empty;
-        public Paciente? Paciente { get; set; }
-        public int Id { get; internal set; }
-        public string Nome { get; internal set; }
-        public int Idade { get; internal set; }
-        public string Logradouro { get; internal set; }
-        public int Numero { get; internal set; }
-        public string Email { get; internal set; }
+        [JsonIgnore]
+        public PacienteResponseDto? Paciente { get; set; }
+        [JsonIgnore]
+        public int Id { get; set; }
+        public string Nome { get; set; } = string.Empty;
+        public int Idade { get; set; }
+        public string Logradouro { get; set; } = string.Empty;
+        public int Numero { get; set; }
+        public string Email { get; set; } = string.Empty;
     }
 }

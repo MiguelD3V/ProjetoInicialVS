@@ -16,8 +16,9 @@ namespace ProjetoIniciaVs.API
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddScoped<IPacienteService, PacienteService>();
+            var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<PacienteRepository>>();
             builder.Services.AddScoped<IPacienteRepository>(provider =>
-            new PacienteRepository("Server=localhost; Database=HospitalDb;Integrated Security = true;Connect Timeout = 30;TrustServerCertificate=true;"));
+            new PacienteRepository("Server=localhost; Database=HospitalDb;Integrated Security = true;Connect Timeout = 30;TrustServerCertificate=true;", logger));
 
 
             var app = builder.Build();

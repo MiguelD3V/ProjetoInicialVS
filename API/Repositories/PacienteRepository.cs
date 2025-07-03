@@ -7,6 +7,7 @@ using System.Linq;
 using System;
 using System.Collections.Generic;
 using ProjetoIniciaVs.API.Interfaces;
+using ProjetoIniciaVs.API.Dtos.Requests;
 
 
 namespace ProjetoIniciaVs.API.Repositories
@@ -14,10 +15,12 @@ namespace ProjetoIniciaVs.API.Repositories
     public class PacienteRepository : IPacienteRepository
     {
         private readonly string _connectionString;
+        private readonly ILogger<PacienteRepository> _Logger;
 
-        public PacienteRepository(string connectionString)
+        public PacienteRepository(string connectionString, ILogger<PacienteRepository> logger)
         {
             _connectionString = connectionString;
+            _Logger = logger;
         }
 
         public async Task<IEnumerable<PacienteResponseDto>> GetAllPacientesAsync()
@@ -55,16 +58,25 @@ namespace ProjetoIniciaVs.API.Repositories
                 throw new Exception($"Ocorreu um erro ao buscar o paciente: {ex.Message}", ex);
             }
         }
-        public async Task AddPacienteAsync(Paciente paciente)
+        public async Task<PacienteResponseDto> AddPacienteAsync(PacienteRequestDto paciente)
         {
             try
             {
                 using (var connection = new SqlConnection(_connectionString))
                 {
                     connection.Open();
-                    string query = "INSERT INTO Pacientes (Nome, Idade, Logradouro, Numero, Email) VALUES (@Nome, @Idade, @Logradouro, @Numero, @Email)";
-                    await connection.ExecuteAsync(query, paciente);
-                    connection.Close();
+                    string query = @"INSERT INTO Pacientes (Nome, Idade, Logradouro, Numero, Email) 
+                      VALUES (@Nome, @Idade, @Logradouro, @Numero, @Email);
+                      SELECT CAST(SCOPE_IDENTITY() AS INT);
+                    ";
+                    int novoId = await connection.ExecuteScalarAsync<int>(query, paciente);
+
+                    string selectQuery = "SELECT * FROM Pacientes WHERE Id = @Id";
+
+                    var pacienteCriado = await connection.QueryFirstOrDefaultAsync<PacienteResponseDto>(selectQuery, new { Id = novoId });
+                    _Logger.LogInformation("Paciente criado com sucesso: Id: {@Id},nome: {@Nome}", pacienteCriado.Id, pacienteCriado.Nome);
+
+                    return pacienteCriado;
                 }
             }
             catch (Exception ex)
@@ -72,7 +84,7 @@ namespace ProjetoIniciaVs.API.Repositories
                 throw new Exception($"Ocorreu um erro ao adicionar o paciente: {ex.Message}", ex);
             }
         }
-        public async Task UpdatePacienteAsync(Paciente paciente)
+        public async Task UpdatePacienteAsync(PacienteResponseDto paciente)
         {
             try
             {
@@ -104,6 +116,5 @@ namespace ProjetoIniciaVs.API.Repositories
                 throw new Exception($"Ocorreu um erro ao deletar o paciente: {ex.Message}", ex);
             }
         }
-
     }
 }

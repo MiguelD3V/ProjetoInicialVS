@@ -9,6 +9,7 @@ using ProjetoIniciaVs.API.Dtos.Responses;
 using ProjetoIniciaVs.API.Interfaces;
 using ProjetoIniciaVs.API.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
+using ProjetoIniciaVs.API.Dtos.Requests;
 
 namespace ProjetoIniciaVs.API.Services
 {
@@ -23,11 +24,11 @@ namespace ProjetoIniciaVs.API.Services
 
     
 
-        public async Task <PacienteResponseDto> Inserir(Paciente paciente)
+    public async Task<PacienteResponseDto> Inserir(PacienteRequestDto paciente)
         {
             var response = new PacienteResponseDto();
 
-            if(!EhValido(paciente))
+            if (!EhValido(paciente))
             {
                 response.AddMessage("Dados inválidos para cadastro do paciente");
                 return response;
@@ -35,9 +36,10 @@ namespace ProjetoIniciaVs.API.Services
 
             if (response.Sucesso)
             {
-                await _pacienteRepository.AddPacienteAsync(paciente);
-                response.Paciente = paciente;
+               var pacienteCriado =  await _pacienteRepository.AddPacienteAsync(paciente);
+                response.AddMessage($"Paciente cadastrado com sucesso: id {pacienteCriado.Id},nome {pacienteCriado.Nome}, idade {pacienteCriado.Idade}, Logradouro {pacienteCriado.Logradouro}, numero {pacienteCriado.Numero}.");
             }
+            
             return response;
         }
 
@@ -51,25 +53,25 @@ namespace ProjetoIniciaVs.API.Services
             return response;
         }
 
-        public async Task<PacienteResponseDto> Atualizar(Paciente paciente, int id)
-        {
-            var response = new PacienteResponseDto();
+        //public async Task<PacienteResponseDto> Atualizar(PacienteResponseDto paciente, int id)
+        //{
+        //    var response = new PacienteResponseDto();
 
-            if (!EhValido(paciente))
-            {
-                response.AddMessage("Dados inválidos para atualização");
-                return response;
-            }
+        //    if (!EhValido(paciente))
+        //    {
+        //        response.AddMessage("Dados inválidos para atualização");
+        //        return response;
+        //    }
 
-            if (response.Sucesso)
-            {
-                paciente.Id = id; 
-                await _pacienteRepository.UpdatePacienteAsync(paciente);
-                response.Paciente = paciente;
-            }
+        //    if (response.Sucesso)
+        //    {
+        //        paciente.Id = id; 
+        //        await _pacienteRepository.UpdatePacienteAsync(paciente);
+        //        response.Paciente = paciente;
+        //    }
 
-            return response;
-        }
+        //    return response;
+        //}
 
         public async Task<PacienteResponseDto> Consultar(int id)
         {
@@ -93,9 +95,9 @@ namespace ProjetoIniciaVs.API.Services
             return response;
         }
 
-        private bool EhValido(Paciente paciente)
+        private bool EhValido(PacienteRequestDto paciente)
         {
-            var response = new PacienteResponseDto();
+            var response = new Paciente();
 
             if (paciente.Nome.Length < 3)
             {

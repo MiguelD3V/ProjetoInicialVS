@@ -1,4 +1,5 @@
-﻿using ProjetoIniciaVs.API.Dtos.Responses;
+﻿using ProjetoIniciaVs.API.Dtos.Requests;
+using ProjetoIniciaVs.API.Dtos.Responses;
 using ProjetoIniciaVs.API.Models;
 
 namespace ProjetoIniciaVs.API.Interfaces
@@ -7,8 +8,8 @@ namespace ProjetoIniciaVs.API.Interfaces
     {
         Task<IEnumerable<PacienteResponseDto>> GetAllPacientesAsync();
         Task<PacienteResponseDto> GetPacienteByIdAsync(int id);
-        Task AddPacienteAsync(Paciente paciente);
-        Task UpdatePacienteAsync(Paciente paciente);
+        Task<PacienteResponseDto> AddPacienteAsync(PacienteRequestDto paciente);
+        Task UpdatePacienteAsync(PacienteResponseDto paciente);
         Task DeletePacienteAsync(int id);
     }
 }
