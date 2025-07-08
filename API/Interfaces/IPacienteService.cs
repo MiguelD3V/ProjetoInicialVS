@@ -13,8 +13,8 @@ namespace ProjetoIniciaVs.API.Interfaces
     {
         public Task<PacienteResponseDto> Inserir(PacienteRequestDto paciente);
          public Task<PacienteResponseDto> Deletar(int id);
-         //public Task<PacienteResponseDto> Atualizar(PacienteResponseDto paciente, int id);
-         public Task<PacienteResponseDto> Consultar(int id);
+        public Task<PacienteResponseDto> Atualizar(PacienteRequestDto paciente, int id);
+        public Task<PacienteResponseDto> Consultar(int id);
         public Task<IEnumerable<PacienteResponseDto>> ListarTodos();
 
     }

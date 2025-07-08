@@ -53,25 +53,24 @@ namespace ProjetoIniciaVs.API.Services
             return response;
         }
 
-        //public async Task<PacienteResponseDto> Atualizar(PacienteResponseDto paciente, int id)
-        //{
-        //    var response = new PacienteResponseDto();
+        public async Task<PacienteResponseDto> Atualizar(PacienteRequestDto paciente, int id)
+        {
+            var response = new PacienteResponseDto();
 
-        //    if (!EhValido(paciente))
-        //    {
-        //        response.AddMessage("Dados inválidos para atualização");
-        //        return response;
-        //    }
+            if (!EhValido(paciente))
+            {
+                response.AddMessage("Dados inválidos para atualização");
+                return response;
+            }
 
-        //    if (response.Sucesso)
-        //    {
-        //        paciente.Id = id; 
-        //        await _pacienteRepository.UpdatePacienteAsync(paciente);
-        //        response.Paciente = paciente;
-        //    }
+            if (response.Sucesso)
+            {
+                await _pacienteRepository.UpdatePacienteAsync(paciente, id);
+                response.AddMessage($"Paciente atualizado com sucesso: id {id}, nome {paciente.Nome}, idade {paciente.Idade}, Logradouro {paciente.Logradouro}, numero {paciente.Numero}.");
+            }
 
-        //    return response;
-        //}
+            return response;
+        }
 
         public async Task<PacienteResponseDto> Consultar(int id)
         {

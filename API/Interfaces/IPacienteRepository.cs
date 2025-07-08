@@ -9,7 +9,7 @@ namespace ProjetoIniciaVs.API.Interfaces
         Task<IEnumerable<PacienteResponseDto>> GetAllPacientesAsync();
         Task<PacienteResponseDto> GetPacienteByIdAsync(int id);
         Task<PacienteResponseDto> AddPacienteAsync(PacienteRequestDto paciente);
-        Task UpdatePacienteAsync(PacienteResponseDto paciente);
+        Task<PacienteResponseDto> UpdatePacienteAsync(PacienteRequestDto paciente, int id);
         Task DeletePacienteAsync(int id);
     }
 }

@@ -84,15 +84,32 @@ namespace ProjetoIniciaVs.API.Repositories
                 throw new Exception($"Ocorreu um erro ao adicionar o paciente: {ex.Message}", ex);
             }
         }
-        public async Task UpdatePacienteAsync(PacienteResponseDto paciente)
+        public async Task<PacienteResponseDto> UpdatePacienteAsync(PacienteRequestDto paciente, int id)
         {
             try
             {
                 using var connection = new SqlConnection(_connectionString);
                 connection.Open();
-                string query = "UPDATE Pacientes SET Nome = @Nome, Idade = @Idade, Logradouro = @Logradouro, Numero = @Numero, Email = @Email WHERE Id = @Id";
-                await connection.ExecuteAsync(query, paciente);
-                connection.Close();
+                string query = @"UPDATE Pacientes SET Nome = @Nome, Idade = @Idade, Logradouro = @Logradouro, Numero = @Numero, Email = @Email WHERE Id = @id
+                ";
+                
+                await connection.ExecuteAsync(query, new
+                {
+                    paciente.Nome,
+                    paciente.Idade,
+                    paciente.Logradouro,
+                    paciente.Numero,
+                    paciente.Email,
+                    Id = id
+                });
+
+                string selectQuery = "SELECT * FROM Pacientes WHERE Id = @id";
+
+                var pacienteAtualizado = await connection.QueryFirstOrDefaultAsync<PacienteResponseDto>(selectQuery, new { Id = id});
+
+                _Logger.LogInformation("Paciente atualizado com sucesso: Id: {@id}, Nome: {@Nome}", pacienteAtualizado.Id, pacienteAtualizado.Nome);
+
+                return pacienteAtualizado;
             }
             catch (Exception ex)
             {

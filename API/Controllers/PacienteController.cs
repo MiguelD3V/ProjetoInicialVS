@@ -41,19 +41,20 @@ namespace ProjetoIniciaVs.API.Controllers
             }
         }
 
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> Atualizar(int id,[FromBody] PacienteResponseDto paciente)
-        //{
-        //    try
-        //    {
-        //        var atualizado = await _pacienteService.Atualizar(paciente,id);
-        //        return Ok(atualizado);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Problem($"Ocorreu o erro {ex.Message}", statusCode: 500);
-        //    }
-        //}
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Atualizar(int id, [FromBody] PacienteRequestDto paciente)
+        {
+            try
+            {
+                var atualizado = await _pacienteService.Atualizar(paciente, id);
+
+                return Ok(atualizado);
+            }
+            catch (Exception ex)
+            {
+                return Problem($"Ocorreu o erro {ex.Message}", statusCode: 500);
+            }
+        }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Deletar(int id)
