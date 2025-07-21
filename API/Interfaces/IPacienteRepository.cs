@@ -6,7 +6,7 @@ namespace ProjetoIniciaVs.API.Interfaces
 {
     public interface IPacienteRepository
     {
-        Task<IEnumerable<PacienteResponseDto>> GetAllPacientesAsync();
+        Task<IEnumerable<Paciente>> GetAllPacientesAsync();
         Task<PacienteResponseDto> GetPacienteByIdAsync(int id);
         Task<PacienteResponseDto> AddPacienteAsync(PacienteRequestDto paciente);
         Task<PacienteResponseDto> UpdatePacienteAsync(PacienteRequestDto paciente, int id);

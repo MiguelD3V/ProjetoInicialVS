@@ -12,11 +12,7 @@ namespace ProjetoIniciaVs.API.Dtos.Responses
 {
     public class PacienteResponseDto : ResponseBase
     {
-        [JsonIgnore]
-        public string Mensagem { get; set; } = string.Empty;
-        [JsonIgnore]
-        public PacienteResponseDto? Paciente { get; set; }
-        [JsonIgnore]
+        public string? Mensagem { get; set; }
         public int Id { get; set; }
         public string Nome { get; set; } = string.Empty;
         public int Idade { get; set; }

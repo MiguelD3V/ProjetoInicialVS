@@ -10,16 +10,19 @@ using ProjetoIniciaVs.API.Interfaces;
 using ProjetoIniciaVs.API.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using ProjetoIniciaVs.API.Dtos.Requests;
+using AutoMapper;
 
 namespace ProjetoIniciaVs.API.Services
 {
     public class PacienteService : IPacienteService
     {
         private readonly IPacienteRepository _pacienteRepository;
+        private readonly IMapper _mapper;
 
-        public PacienteService(IPacienteRepository pacienteRepository)
+        public PacienteService(IPacienteRepository pacienteRepository, IMapper mapper)
         {
             _pacienteRepository = pacienteRepository;
+            _mapper = mapper;
         }
 
     
@@ -82,16 +85,7 @@ namespace ProjetoIniciaVs.API.Services
         {
             var lista = await _pacienteRepository.GetAllPacientesAsync();
 
-            var response = lista.Select(p => new PacienteResponseDto
-            {
-                Id = p.Id,
-                Nome = p.Nome,
-                Idade = p.Idade,
-                Logradouro = p.Logradouro,
-                Numero = p.Numero,
-                Email = p.Email
-            });
-            return response;
+            return _mapper.Map<List<PacienteResponseDto>>(lista);
         }
 
         private bool EhValido(PacienteRequestDto paciente)

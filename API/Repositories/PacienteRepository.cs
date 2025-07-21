@@ -23,7 +23,7 @@ namespace ProjetoIniciaVs.API.Repositories
             _Logger = logger;
         }
 
-        public async Task<IEnumerable<PacienteResponseDto>> GetAllPacientesAsync()
+        public async Task<IEnumerable<Paciente>> GetAllPacientesAsync()
         {
             try
             {
@@ -31,7 +31,7 @@ namespace ProjetoIniciaVs.API.Repositories
                 {
                     connection.Open();
                     string query = "SELECT * FROM Pacientes";
-                    return await connection.QueryAsync<PacienteResponseDto>(query);
+                    return await connection.QueryAsync<Paciente>(query);
 
                 }
             }
@@ -45,13 +45,15 @@ namespace ProjetoIniciaVs.API.Repositories
         {
             try
             {
-                using (var connection = new SqlConnection(_connectionString))
+                using var connection = new SqlConnection(_connectionString);
+                connection.Open();
+                string query = "SELECT * FROM Pacientes WHERE Id = @Id";
+                var result = await connection.QueryFirstOrDefaultAsync<PacienteResponseDto>(query, new { Id = id });
+                if (result == null)
                 {
-                    connection.Open();
-                    string query = "SELECT * FROM Pacientes WHERE Id = @Id";
-                    return await connection.QueryFirstOrDefaultAsync<PacienteResponseDto>(query, new { Id = id });
-
+                    throw new Exception($"Paciente com ID {id} não encontrado.");
                 }
+                return result;
             }
             catch (Exception ex)
             {
