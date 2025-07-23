@@ -90,7 +90,6 @@ namespace ProjetoIniciaVs.API.Services
 
         private bool EhValido(PacienteRequestDto paciente)
         {
-            var response = new Paciente();
 
             if (paciente.Nome.Length < 3)
             {
