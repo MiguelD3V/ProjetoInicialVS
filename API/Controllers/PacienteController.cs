@@ -28,9 +28,7 @@ namespace ProjetoIniciaVs.API.Controllers
         public async Task<IActionResult> CadastroAsync([FromBody] PacienteRequestDto paciente)
         {
             try
-            {
-                var pacienteResponse = new PacienteResponseDto();
-               
+            {             
                 var resultado = await _pacienteService.Inserir(paciente);
 
                 return Ok(resultado);

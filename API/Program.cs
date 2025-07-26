@@ -1,4 +1,5 @@
 using ProjetoIniciaVs.API.Interfaces;
+using ProjetoIniciaVs.API.Mappers;
 using ProjetoIniciaVs.API.Repositories;
 using ProjetoIniciaVs.API.Services;
 
@@ -16,13 +17,13 @@ namespace ProjetoIniciaVs.API
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddScoped<IPacienteService, PacienteService>();
-            var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<PacienteRepository>>();
-            builder.Services.AddScoped<IPacienteRepository>(provider =>
-            new PacienteRepository("Server=localhost; Database=HospitalDb;Integrated Security = true;Connect Timeout = 30;TrustServerCertificate=true;", logger));
 
+            builder.Services.AddScoped<IPacienteRepository, PacienteRepository>();
+
+            builder.Services.AddAutoMapper(cfg => { cfg.AddMaps(typeof(Program)); });
 
             var app = builder.Build();
-
+           
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {

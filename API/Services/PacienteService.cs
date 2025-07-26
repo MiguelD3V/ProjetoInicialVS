@@ -78,7 +78,8 @@ namespace ProjetoIniciaVs.API.Services
         public async Task<PacienteResponseDto> Consultar(int id)
         {
             var paciente = await _pacienteRepository.GetPacienteByIdAsync(id);
-            return paciente;
+            var pacienteDto = _mapper.Map<PacienteResponseDto>(paciente);
+            return pacienteDto;
         }
 
         public async Task<IEnumerable<PacienteResponseDto>> ListarTodos()
