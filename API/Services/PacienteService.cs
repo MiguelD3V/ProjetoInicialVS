@@ -16,6 +16,7 @@ namespace ProjetoIniciaVs.API.Services
 {
     public class PacienteService : IPacienteService
     {
+
         private readonly IPacienteRepository _pacienteRepository;
         private readonly IMapper _mapper;
 
