@@ -1,4 +1,6 @@
 using ProjetoIniciaVs.API.Interfaces;
+using ProjetoIniciaVs.API.Mappers;
+using ProjetoIniciaVs.API.Repositories;
 using ProjetoIniciaVs.API.Services;
 
 namespace ProjetoIniciaVs.API
@@ -16,8 +18,12 @@ namespace ProjetoIniciaVs.API
 
             builder.Services.AddScoped<IPacienteService, PacienteService>();
 
-            var app = builder.Build();
+            builder.Services.AddScoped<IPacienteRepository, PacienteRepository>();
 
+            builder.Services.AddAutoMapper(cfg => { cfg.AddMaps(typeof(Program)); });
+
+            var app = builder.Build();
+           
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {

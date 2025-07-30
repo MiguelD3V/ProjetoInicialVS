@@ -9,95 +9,90 @@ using ProjetoIniciaVs.API.Dtos.Responses;
 using ProjetoIniciaVs.API.Interfaces;
 using ProjetoIniciaVs.API.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
+using ProjetoIniciaVs.API.Dtos.Requests;
+using AutoMapper;
 
 namespace ProjetoIniciaVs.API.Services
 {
     public class PacienteService : IPacienteService
     {
-        
 
-        
+        private readonly IPacienteRepository _pacienteRepository;
+        private readonly IMapper _mapper;
 
-        public static List<Paciente> _pacientes = new List<Paciente>();
+        public PacienteService(IPacienteRepository pacienteRepository, IMapper mapper)
+        {
+            _pacienteRepository = pacienteRepository;
+            _mapper = mapper;
+        }
 
-        public Task <PacienteResponseDto> Inserir(Paciente paciente)
+    
+
+    public async Task<PacienteResponseDto> Inserir(PacienteRequestDto paciente)
         {
             var response = new PacienteResponseDto();
 
-            if(!EhValido(paciente))
+            if (!EhValido(paciente))
             {
                 response.AddMessage("Dados inválidos para cadastro do paciente");
-                return Task.FromResult(response);
+                return response;
             }
 
             if (response.Sucesso)
             {
-                paciente.Id = _pacientes.Count + 1;
-                _pacientes.Add(paciente);
-                response.Paciente = paciente;
+               var pacienteCriado =  await _pacienteRepository.AddPacienteAsync(paciente);
+                response.AddMessage($"Paciente cadastrado com sucesso: id {pacienteCriado.Id},nome {pacienteCriado.Nome}, idade {pacienteCriado.Idade}, Logradouro {pacienteCriado.Logradouro}, numero {pacienteCriado.Numero}.");
             }
-            return Task.FromResult(response);
+            
+            return response;
         }
 
-        public Task<PacienteResponseDto> Deletar(int id)
+        public async Task<PacienteResponseDto> Deletar(int id)
         {
             var response = new PacienteResponseDto();
 
-            var indx = _pacientes.FindIndex(p => p.Id == id);
-
-            if (indx == -1)
-            {
-                response.AddMessage("Id Inválido");
-            }
-            else
-            {
-                _pacientes.RemoveAt(indx);
+                await _pacienteRepository.DeletePacienteAsync(id);
                 response.AddMessage("Paciente deletado com sucesso");
-            }
-
-            return Task.FromResult(response);
+          
+            return response;
         }
 
-        public Task<PacienteResponseDto> Atualizar(Paciente paciente)
+        public async Task<PacienteResponseDto> Atualizar(PacienteRequestDto paciente, int id)
         {
             var response = new PacienteResponseDto();
-
-            var indx = _pacientes.FindIndex(p => p.Id == paciente.Id);
-
-            if (indx == -1)
-            {
-                response.AddMessage("paciente não encontrado");
-            }
 
             if (!EhValido(paciente))
             {
                 response.AddMessage("Dados inválidos para atualização");
-                return Task.FromResult(response);
+                return response;
             }
 
             if (response.Sucesso)
             {
-                _pacientes[indx] = paciente;
-                response.Paciente = paciente;
+                await _pacienteRepository.UpdatePacienteAsync(paciente, id);
+                response.AddMessage($"Paciente atualizado com sucesso: id {id}, nome {paciente.Nome}, idade {paciente.Idade}, Logradouro {paciente.Logradouro}, numero {paciente.Numero}.");
             }
 
-            return Task.FromResult(response);
+            return response;
         }
 
-        public Task<Paciente?> Consultar(int id)
+        public async Task<PacienteResponseDto> Consultar(int id)
         {
-            var paciente = _pacientes.Find(p => p.Id == id);
-            return Task.FromResult(paciente);
+            var paciente = await _pacienteRepository.GetPacienteByIdAsync(id);
+            var pacienteDto = _mapper.Map<PacienteResponseDto>(paciente);
+            return pacienteDto;
         }
 
-        public Task<List<Paciente>> ListarTodos()
+        public async Task<IEnumerable<PacienteResponseDto>> ListarTodos()
         {
-            return Task.FromResult(_pacientes);
+            var lista = await _pacienteRepository.GetAllPacientesAsync();
+
+            return _mapper.Map<List<PacienteResponseDto>>(lista);
         }
 
-        private bool EhValido(Paciente paciente)
+        private bool EhValido(PacienteRequestDto paciente)
         {
-            var response = new PacienteResponseDto();
+            var response = new Paciente();
 
             if (paciente.Nome.Length < 3)
             {

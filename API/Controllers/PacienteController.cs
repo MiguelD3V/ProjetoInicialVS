@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using ProjetoIniciaVs.API.Dtos.Requests;
+using ProjetoIniciaVs.API.Dtos.Responses;
 using ProjetoIniciaVs.API.Interfaces;
 using ProjetoIniciaVs.API.Models;
 
@@ -17,19 +19,20 @@ namespace ProjetoIniciaVs.API.Controllers
     {
         private readonly IPacienteService _pacienteService;
         private readonly ILogger _logger;
-
+        
         public PacienteController(IPacienteService pacienteService, ILogger logger)
+
         {
             _pacienteService = pacienteService;
             _logger = logger;
         }
 
         [HttpPost]
-        public IActionResult Cadastro([FromBody] Paciente paciente)
+        public async Task<IActionResult> CadastroAsync([FromBody] PacienteRequestDto paciente)
         {
             try
-            {
-                var resultado = _pacienteService.Inserir(paciente);
+            {             
+                var resultado = await _pacienteService.Inserir(paciente);
 
                 return Ok(resultado);
             }
@@ -41,12 +44,12 @@ namespace ProjetoIniciaVs.API.Controllers
             }
         }
 
-        [HttpPut("{Id}")]
-        public IActionResult Atualizar(int id, [FromBody] Paciente paciente)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Atualizar(int id, [FromBody] PacienteRequestDto paciente)
         {
             try
             {
-                var atualizado = _pacienteService.Atualizar(paciente);
+                var atualizado = await _pacienteService.Atualizar(paciente, id);
 
                 return Ok(atualizado);
             }
@@ -58,11 +61,11 @@ namespace ProjetoIniciaVs.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Deletar(int id)
+        public async Task<IActionResult> Deletar(int id)
         {
             try
             {
-                var resultado = _pacienteService.Deletar(id);
+                var resultado = await _pacienteService.Deletar(id);
 
                 return Ok(resultado);
             }
@@ -75,10 +78,11 @@ namespace ProjetoIniciaVs.API.Controllers
 
         [HttpGet("{id}")]
         public IActionResult Consulta(int id)
+
         {
             try
             {
-                var busca = _pacienteService.Consultar(id);
+                var busca = await _pacienteService.Consultar(id);
 
                 return Ok(busca);
             }
@@ -90,11 +94,11 @@ namespace ProjetoIniciaVs.API.Controllers
         }
 
         [HttpGet]
-        public IActionResult ListarTodos()
+        public async Task<IActionResult> ListarTodos()
         {
             try
             {
-                var lista = _pacienteService.ListarTodos();
+                var lista = await _pacienteService.ListarTodos();
                 return Ok(lista);
             }
             catch (Exception ex)
