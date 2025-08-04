@@ -21,18 +21,11 @@ namespace ProjetoIniciaVs.API
             builder.Services.AddAutoMapper(cfg => { cfg.AddMaps(typeof(Program)); });
 
             builder.Services.AddScoped<IPacienteService, PacienteService>();
+
             builder.Services.AddScoped<IProntuarioService, ProntuarioService>();
-            builder.Services.AddScoped<IProntuarioRepository, ProntuarioRepository>(provider =>
-            {
-                var mapper = provider.GetRequiredService<IMapper>();
-                var logger = provider.GetRequiredService<ILogger<ProntuarioRepository>>();
-                return new ProntuarioRepository("Server=localhost; Database=HospitalDb;Integrated Security = true;Connect Timeout = 30;TrustServerCertificate=true;", logger, mapper);
-            });
-            builder.Services.AddScoped<IPacienteRepository, PacienteRepository>(provider =>
-            {
-                var logger = provider.GetRequiredService<ILogger<PacienteRepository>>();
-                return new PacienteRepository("Server=localhost; Database=HospitalDb;Integrated Security = true;Connect Timeout = 30;TrustServerCertificate=true;", logger);
-            });
+            builder.Services.AddScoped<IProntuarioRepository, ProntuarioRepository>();
+            builder.Services.AddScoped<IPacienteRepository, PacienteRepository>();
+
 
             var app = builder.Build();
 

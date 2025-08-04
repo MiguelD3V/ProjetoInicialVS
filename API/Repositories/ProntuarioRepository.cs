@@ -20,9 +20,9 @@ namespace ProjetoIniciaVs.API.Repositories
         private readonly string _connectionString;
         private readonly ILogger<ProntuarioRepository> _logger;
 
-        public ProntuarioRepository(string connectionString, ILogger<ProntuarioRepository> logger, IMapper mapper)
+        public ProntuarioRepository(ILogger<ProntuarioRepository> logger, IConfiguration configuration)
         {
-            _connectionString = connectionString;
+            _connectionString = configuration.GetConnectionString("DefaultConnection");
             _logger = logger;
         }
 

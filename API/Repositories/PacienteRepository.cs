@@ -17,9 +17,9 @@ namespace ProjetoIniciaVs.API.Repositories
         private readonly string _connectionString;
         private readonly ILogger<PacienteRepository> _Logger;
 
-        public PacienteRepository(string connectionString, ILogger<PacienteRepository> logger)
+        public PacienteRepository(ILogger<PacienteRepository> logger, IConfiguration configuration)
         {
-            _connectionString = connectionString;
+            _connectionString = configuration.GetConnectionString("DefaultConnection");
             _Logger = logger;
         }
 
